@@ -1,35 +1,19 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using PayrollApp.Api.Data.Entities;
+using PayrollApp.Api.Data.Enums;
 
 namespace PayrollApp.Api.Data.DataInitializer
 {
     public static class UserAndRoleDataInitializer
     {
-        public static void SeedData(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public static void SeedData(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, PayrollContext context)
         {
             SeedRoles(roleManager);
-            SeedUsers(userManager);
+            SeedUsers(userManager, context);
         }
 
-        private static void SeedUsers (UserManager<User> userManager)
+        private static void SeedUsers (UserManager<User> userManager, PayrollContext context)
         {
-            if (userManager.FindByEmailAsync("johndoe@localhost").Result == null)
-            {
-                User user = new User();
-                user.UserName = "johndoe@localhost";
-                user.Email = "johndoe@localhost";
-                user.FirstName = "John";
-                user.LastName = "Doe";
-
-                IdentityResult result = userManager.CreateAsync(user, "P@ssw0rd1!").Result;
-
-                if (result.Succeeded)
-                {
-                    userManager.AddToRoleAsync(user, "User").Wait();
-                }
-            }
-
-
             if (userManager.FindByEmailAsync("alex@localhost").Result == null)
             {
                 User user = new User();
@@ -43,6 +27,13 @@ namespace PayrollApp.Api.Data.DataInitializer
                 if (result.Succeeded)
                 {
                     userManager.AddToRoleAsync(user, "Admin").Wait();
+                    context.Employees.Add(new Employee
+                    {
+                        User = user,
+                        EmployeeNumber = "EMP-00001",
+                        EmploymentStatus = EmploymentStatus.Regular
+                    });
+                    context.SaveChanges();
                 }
             }
         }

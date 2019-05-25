@@ -8,7 +8,7 @@ namespace PayrollApp.Api.Data.Enums
     public enum PayrollStatus
     {
         Created,
-        UnderReview,
+        InProgress,
         WaitingForApproval,
         Approved,
         WaitingForPayment,

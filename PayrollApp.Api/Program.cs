@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using PayrollApp.Api.Data;
 using PayrollApp.Api.Data.DataInitializer;
 using PayrollApp.Api.Data.Entities;
 using System;
@@ -21,7 +22,8 @@ namespace PayrollApp.Api
                 {
                     var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
                     var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                    UserAndRoleDataInitializer.SeedData(userManager, roleManager);
+                    var context = serviceProvider.GetRequiredService<PayrollContext>();
+                    UserAndRoleDataInitializer.SeedData(userManager, roleManager, context);
                 }
                 catch(Exception ex)
                 {
